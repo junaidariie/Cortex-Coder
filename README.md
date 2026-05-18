@@ -12,7 +12,7 @@
 
 ---
 
-> **Note on Performance:** Due to the CPU-only inference setup, the **first token may take a few seconds** to appear. After that, generation runs at a comfortable medium pace — not too slow, not too fast. This is expected behavior for a quantized GGUF model running on CPU via `llama-cpp-python`.
+> **Note on Performance:** Even with GGUF, the inference performance is poor due to the limited and low-quality hardware of the free HF repository, so I’d recommend running the app locally..
 
 ---
 ## Notebook
