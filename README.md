@@ -408,7 +408,7 @@ Health check.
 
 | Property | Value |
 |---|---|
-| Base Model | Qwen2.5-Coder-0.5B-Instruct |
+| Base Model | Qwen2.5-0.5B-Instruct |
 | Format | GGUF (Q4_K_M quantization) |
 | Parameters | ~0.5B |
 | Context Length | 4096 tokens |
