@@ -1,0 +1,4 @@
+Model/
+myvenv/
+__pycache__/
+*.pyc

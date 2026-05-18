@@ -1,0 +1,8 @@
+llama-cpp-python
+uvicorn
+fastapi
+pydantic
+langchain
+langgraph
+langchain-community
+python-multipart
