@@ -155,7 +155,7 @@ The model was fine-tuned using the notebook at `Notebook/Qwen2_5_small_finetunin
 
 ### Base Model
 ```
-unsloth/Qwen2.5-Coder-0.5B-Instruct-bnb-4bit
+unsloth/Qwen2.5-0.5B-Instruct-bnb-4bit
 ```
 
 ### LoRA Configuration
