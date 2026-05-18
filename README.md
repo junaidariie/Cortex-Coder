@@ -1,6 +1,6 @@
 # ◆ Cortex Coder
 
-> An intelligent, self-hosted AI coding assistant powered by a fine-tuned Qwen2.5-Coder model, served via a LangGraph agentic pipeline, FastAPI backend, and a sleek dark-mode web UI.
+> An intelligent, self-hosted AI coding assistant powered by a fine-tuned Qwen2.5-0.5B model, served via a LangGraphe, FastAPI backend, and a sleek dark-mode web UI.
 
 <div align="center">
 
@@ -125,7 +125,6 @@ FINAL-CODER/
 ├── Notebook/
 │   └── Qwen2_5_small_finetuning.ipynb               # Fine-tuning notebook (Unsloth + LoRA)
 │
-├── assets/                         # Images for README
 ├── index.html                      # Frontend — single-file chat UI
 ├── Dockerfile                      # Container definition (Python 3.10, port 7860)
 ├── requirements.txt                # Python dependencies
@@ -205,7 +204,7 @@ The fine-tuned model was evaluated against the base model across 5 key metrics. 
 
 ### Base vs Fine-tuned Model Performance
 
-![Base vs Fine-tuned Model Performance](assets/eval_comparison.png)
+![Base vs Fine-tuned Model Performance](<img width="976" height="576" alt="output1" src="https://github.com/user-attachments/assets/f3d9f5c5-40c6-45f5-a5dd-ff6dfe6906ee" />)
 
 | Metric | Base Model | Fine-tuned Model | Direction |
 |---|---|---|---|
@@ -217,7 +216,7 @@ The fine-tuned model was evaluated against the base model across 5 key metrics. 
 
 ### Percentage Improvement over Base Model
 
-![Percentage Improvement](assets/eval_improvement.png)
+![Percentage Improvement](<img width="1176" height="676" alt="output2" src="https://github.com/user-attachments/assets/ebd2f91a-cac5-4da1-8dda-2b85ee96a0f6" />)
 
 | Metric | Improvement |
 |---|---|
@@ -430,5 +429,3 @@ Three specialized prompts drive the agent behavior:
 - **`REPAIR_SYSTEM_PROMPT`** — Strict repair agent that converts malformed output into valid executable code
 
 ---
-
-*Built by Junaid — Cortex Coder v1.0*
