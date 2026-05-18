@@ -15,6 +15,10 @@
 > **Note on Performance:** Due to the CPU-only inference setup, the **first token may take a few seconds** to appear. After that, generation runs at a comfortable medium pace — not too slow, not too fast. This is expected behavior for a quantized GGUF model running on CPU via `llama-cpp-python`.
 
 ---
+## Notebook
+
+> **Due to some outputs in the notebook github can't render them and is not able the show the file so here's the HF repo link of Notebook**
+> link : https://huggingface.co/spaces/junaid17/Cortex-Coder/blob/main/Notebook/Qwen2_5_finetuning.ipynb
 
 ## Demo
 
