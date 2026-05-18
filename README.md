@@ -204,7 +204,8 @@ The fine-tuned model was evaluated against the base model across 5 key metrics. 
 
 ### Base vs Fine-tuned Model Performance
 
-![Base vs Fine-tuned Model Performance](<img width="976" height="576" alt="output1" src="https://github.com/user-attachments/assets/f3d9f5c5-40c6-45f5-a5dd-ff6dfe6906ee" />)
+![Base vs Fine-tuned Model Performance]
+<img width="976" height="576" alt="output1" src="https://github.com/user-attachments/assets/f3d9f5c5-40c6-45f5-a5dd-ff6dfe6906ee" />
 
 | Metric | Base Model | Fine-tuned Model | Direction |
 |---|---|---|---|
