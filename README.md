@@ -2,6 +2,24 @@
 
 > An intelligent, self-hosted AI coding assistant powered by a fine-tuned Qwen2.5-Coder model, served via a LangGraph agentic pipeline, FastAPI backend, and a sleek dark-mode web UI.
 
+<div align="center">
+
+[![Live App](https://img.shields.io/badge/Live%20App-Cortex%20Coder-blue?style=for-the-badge)](https://junaidariie.github.io/Cortex-Coder/)
+[![HuggingFace Space](https://img.shields.io/badge/HuggingFace-Space-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/junaid17/Cortex-Coder/tree/main)
+[![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co/junaid17/qwen2.5-0.5b-coding-assistant-gguf)
+
+</div>
+
+---
+
+> **Note on Performance:** Due to the CPU-only inference setup, the **first token may take a few seconds** to appear. After that, generation runs at a comfortable medium pace — not too slow, not too fast. This is expected behavior for a quantized GGUF model running on CPU via `llama-cpp-python`.
+
+---
+
+## Demo
+
+> 🎬 **Video Demo:** *(Coming soon — link will be added here)*
+
 ---
 
 ## Table of Contents
@@ -12,6 +30,7 @@
 - [Project Structure](#project-structure)
 - [Tech Stack](#tech-stack)
 - [Fine-Tuning](#fine-tuning)
+- [Evaluation Results](#evaluation-results)
 - [Setup & Installation](#setup--installation)
 - [Running the App](#running-the-app)
 - [Docker Deployment](#docker-deployment)
@@ -34,38 +53,22 @@ Cortex Coder is a full-stack AI coding assistant that:
 
 ## Architecture
 
+### Backend API (FastAPI)
+
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     Browser (index.html)                │
-│   ┌──────────┐   ┌──────────────────────────────────┐   │
-│   │ Sidebar  │   │         Chat Area                │   │
-│   │ - History│   │  - Streaming messages            │   │
-│   │ - New    │   │  - Code blocks + copy            │   │
-│   │   Chat   │   │  - Metadata bar (tokens, speed)  │   │
-│   └──────────┘   └──────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────┘
-                         │ HTTP (fetch + ReadableStream)
-                         ▼
 ┌─────────────────────────────────────────────────────────┐
 │                  FastAPI Backend (app.py)                │
 │                                                         │
-│   POST /chat/stream   →  StreamingResponse              │
-│   POST /chat/metadata →  JSON metadata                  │
+│   GET  /                  →  Health check               │
+│   POST /chat/stream       →  StreamingResponse          │
+│                               (token-by-token)          │
+│   POST /chat/metadata     →  JSON metadata              │
+│                               (intent, task, language)  │
 └────────────────────────┬────────────────────────────────┘
                          │
                          ▼
 ┌─────────────────────────────────────────────────────────┐
 │              LangGraph Agent (scripts/main.py)          │
-│                                                         │
-│   classify_intent → route                               │
-│        ├── general_chat → END                           │
-│        └── coding                                       │
-│               ├── classify_task                         │
-│               ├── detect_language                       │
-│               ├── generate_code                         │
-│               ├── classify_output                       │
-│               │       ├── final → END                   │
-│               │       └── repair → classify_output      │
 └────────────────────────┬────────────────────────────────┘
                          │
                          ▼
@@ -76,56 +79,15 @@ Cortex Coder is a full-stack AI coding assistant that:
 └─────────────────────────────────────────────────────────┘
 ```
 
+The frontend (`index.html`) connects to the backend via `fetch` + `ReadableStream` for real-time token streaming. No framework — pure vanilla JS.
+
 ---
 
 ## Agent Pipeline
 
-The LangGraph graph processes every message through a structured pipeline:
+The LangGraph graph processes every message through a structured multi-node pipeline. Below is the actual graph visualization:
 
-```
-                    ┌─────────────────┐
-                    │  User Message   │
-                    └────────┬────────┘
-                             │
-                    ┌────────▼────────┐
-                    │ classify_intent │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-     ┌────────▼────────┐          ┌─────────▼────────┐
-     │  general_chat   │          │  classify_task   │
-     │  (chat prompt)  │          │  (debug/explain/ │
-     └────────┬────────┘          │   code_gen)      │
-              │                   └─────────┬────────┘
-             END                            │
-                                  ┌─────────▼────────┐
-                                  │ detect_language  │
-                                  │ (py/js/cpp/java/ │
-                                  │  sql/unknown)    │
-                                  └─────────┬────────┘
-                                            │
-                                  ┌─────────▼────────┐
-                                  │  generate_code   │
-                                  │  (LLM call)      │
-                                  └─────────┬────────┘
-                                            │
-                                  ┌─────────▼────────┐
-                                  │ classify_output  │
-                                  │ (is it code?)    │
-                                  └─────────┬────────┘
-                                            │
-                             ┌──────────────┴──────────────┐
-                             │                             │
-                    ┌────────▼────────┐          ┌─────────▼────────┐
-                    │     final       │          │     repair       │
-                    │     END         │          │  (retry ≤ 2x)    │
-                    └─────────────────┘          └─────────┬────────┘
-                                                           │
-                                                  ┌────────▼────────┐
-                                                  │ classify_output │
-                                                  └─────────────────┘
-```
+![LangGraph Agent Pipeline](assets/langgraph_pipeline.png)
 
 ### Node Descriptions
 
@@ -159,6 +121,7 @@ FINAL-CODER/
 ├── Notebook/
 │   └── Qwen2_5_small_finetuning.ipynb               # Fine-tuning notebook (Unsloth + LoRA)
 │
+├── assets/                         # Images for README
 ├── index.html                      # Frontend — single-file chat UI
 ├── Dockerfile                      # Container definition (Python 3.10, port 7860)
 ├── requirements.txt                # Python dependencies
@@ -232,12 +195,45 @@ Upload to HuggingFace Hub
 
 ---
 
+## Evaluation Results
+
+The fine-tuned model was evaluated against the base model across 5 key metrics. Despite being only a **0.5B parameter model**, the fine-tuning produced significant improvements across all metrics.
+
+### Base vs Fine-tuned Model Performance
+
+![Base vs Fine-tuned Model Performance](assets/eval_comparison.png)
+
+| Metric | Base Model | Fine-tuned Model | Direction |
+|---|---|---|---|
+| PPL (Perplexity) | 3.58 | 1.98 | ↓ Lower is better |
+| BLEU | 13.98 | 24.55 | ↑ Higher is better |
+| ROUGE-1 | 0.45 | 0.53 | ↑ Higher is better |
+| ROUGE-L | 0.27 | 0.44 | ↑ Higher is better |
+| Pass@3 | 14.00 | 56.00 | ↑ Higher is better |
+
+### Percentage Improvement over Base Model
+
+![Percentage Improvement](assets/eval_improvement.png)
+
+| Metric | Improvement |
+|---|---|
+| PPL | 44.69% reduction |
+| BLEU | 75.58% increase |
+| ROUGE-1 | 19.33% increase |
+| ROUGE-L | 61.55% increase |
+| Pass@K | **300.00% increase** |
+
+> The **Pass@3 score jumping from 14 to 56** (a 300% improvement) is the most significant result — meaning the fine-tuned model generates correct, executable code solutions 4x more often than the base model.
+
+---
+
 ## Setup & Installation
 
 ### Prerequisites
 
 - Python 3.10+
 - The GGUF model file placed at `Model/qwen2.5-0.5b-coding-assistant-q4_k_m.gguf`
+- Download model from: [junaid17/qwen2.5-0.5b-coding-assistant-gguf](https://huggingface.co/junaid17/qwen2.5-0.5b-coding-assistant-gguf)
 
 ### 1. Create virtual environment
 
@@ -285,12 +281,9 @@ uvicorn app:app --host 0.0.0.0 --port 7860 --reload
 
 ### Open the frontend
 
-Open `index.html` directly in your browser, or serve it statically.
+Open `index.html` directly in your browser, or visit the live app:
 
-The frontend connects to:
-```
-https://junaid17-cortex-coder.hf.space
-```
+**Live App:** [https://junaidariie.github.io/Cortex-Coder/](https://junaidariie.github.io/Cortex-Coder/)
 
 To run locally, change `API_BASE` in `index.html`:
 ```javascript
@@ -419,7 +412,8 @@ Health check.
 | Inference | CPU via llama-cpp-python |
 | Temperature | 0.7 |
 | Max Output Tokens | 1000 |
-| HuggingFace Repo | `junaid17/qwen2.5-coder-3b-gguf` |
+| HuggingFace Model | [junaid17/qwen2.5-0.5b-coding-assistant-gguf](https://huggingface.co/junaid17/qwen2.5-0.5b-coding-assistant-gguf) |
+| HuggingFace Space | [junaid17/Cortex-Coder](https://huggingface.co/spaces/junaid17/Cortex-Coder/tree/main) |
 
 ---
 
