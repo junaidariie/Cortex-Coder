@@ -91,7 +91,7 @@ The frontend (`index.html`) connects to the backend via `fetch` + `ReadableStrea
 
 The LangGraph graph processes every message through a structured multi-node pipeline. Below is the actual graph visualization:
 
-![LangGraph Agent Pipeline](assets/langgraph_pipeline.png)
+<img width="331" height="693" alt="output" src="https://github.com/user-attachments/assets/1a6f0b26-ccb1-462b-ba4b-ed817d6c809d" />
 
 ### Node Descriptions
 
@@ -204,7 +204,6 @@ The fine-tuned model was evaluated against the base model across 5 key metrics. 
 
 ### Base vs Fine-tuned Model Performance
 
-![Base vs Fine-tuned Model Performance]
 <img width="976" height="576" alt="output1" src="https://github.com/user-attachments/assets/f3d9f5c5-40c6-45f5-a5dd-ff6dfe6906ee" />
 
 | Metric | Base Model | Fine-tuned Model | Direction |
@@ -217,7 +216,7 @@ The fine-tuned model was evaluated against the base model across 5 key metrics. 
 
 ### Percentage Improvement over Base Model
 
-![Percentage Improvement](<img width="1176" height="676" alt="output2" src="https://github.com/user-attachments/assets/ebd2f91a-cac5-4da1-8dda-2b85ee96a0f6" />)
+<img width="1176" height="676" alt="output2" src="https://github.com/user-attachments/assets/ebd2f91a-cac5-4da1-8dda-2b85ee96a0f6" />
 
 | Metric | Improvement |
 |---|---|
